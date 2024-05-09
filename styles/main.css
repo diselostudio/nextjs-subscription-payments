@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '@fillout/react/style.css';
 
 *,
 *:before,

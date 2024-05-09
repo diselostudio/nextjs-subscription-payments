@@ -54,13 +54,20 @@ export default function CustomerPortalForm({ subscription }: Props) {
       }
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
-          <Button
+          <p className="pb-4 sm:pb-0">Cancel your subscription at any time</p>
+          {/* <Button
             variant="slim"
             onClick={handleStripePortalRequest}
             loading={isSubmitting}
           >
             Open customer portal
+          </Button> */}
+          <Button
+            variant="slim"
+            disabled={!subscription}
+            onClick={() => console.log(9999)}
+          >
+            Cancel
           </Button>
         </div>
       }

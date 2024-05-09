@@ -10,6 +10,8 @@ import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { CancelDialog } from '@/components/ui/CancelDialog';
+import { DialogTrigger } from '@/components/ui/Dialog';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -114,7 +116,7 @@ export default function Pricing({ user, products, subscription }: Props) {
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </p>
-            <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+            {/* <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
               {intervals.includes('month') && (
                 <button
                   onClick={() => setBillingInterval('month')}
@@ -141,7 +143,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                   Yearly billing
                 </button>
               )}
-            </div>
+            </div> */}
           </div>
           <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
             {products.map((product) => {
@@ -149,6 +151,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                 (price) => price.interval === billingInterval
               );
               if (!price) return null;
+              const isSuscribedToPlan = subscription?.price_id === price.id;
               const priceString = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: price.currency!,
@@ -158,11 +161,10 @@ export default function Pricing({ user, products, subscription }: Props) {
                 <div
                   key={product.id}
                   className={cn(
-                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
+                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600',
                     {
-                      'border border-pink-500': subscription
-                        ? product.name === subscription?.prices?.products?.name
-                        : product.name === 'Freelancer'
+                      'border border-pink-500': isSuscribedToPlan,
+                      'bg-zinc-900': !isSuscribedToPlan
                     },
                     'flex-1', // This makes the flex item grow to fill the space
                     'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
@@ -182,15 +184,37 @@ export default function Pricing({ user, products, subscription }: Props) {
                         /{billingInterval}
                       </span>
                     </p>
-                    <Button
-                      variant="slim"
-                      type="button"
-                      loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
-                      className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
-                    >
-                      {subscription ? 'Manage' : 'Subscribe'}
-                    </Button>
+
+                    {!subscription ||
+                      (!isSuscribedToPlan && (
+                        <Button
+                          variant={'slim'}
+                          type="button"
+                          disabled={!!(subscription && !isSuscribedToPlan)}
+                          loading={priceIdLoading === price.id}
+                          onClick={() => handleStripeCheckout(price)}
+                          className={cn(
+                            'block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900'
+                          )}
+                        >
+                          {!subscription
+                            ? 'Subscribe'
+                            : 'Contact sales for an update'}
+                        </Button>
+                      ))}
+                    {isSuscribedToPlan && (
+                      <CancelDialog subscriptionId={subscription.id}>
+                        <Button
+                          variant={'slim'}
+                          type="button"
+                          className={cn(
+                            'block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900'
+                          )}
+                        >
+                          Cancel
+                        </Button>
+                      </CancelDialog>
+                    )}
                   </div>
                 </div>
               );
