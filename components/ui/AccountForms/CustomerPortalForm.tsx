@@ -7,6 +7,8 @@ import { createStripePortal } from '@/utils/stripe/server';
 import Link from 'next/link';
 import Card from '@/components/ui/Card';
 import { Tables } from '@/types_db';
+import { CancelDialog } from '@/components/ui/CancelDialog';
+import { PausedBadge, DiscountBadge } from '@/components/ui/Pricing/Pricing';
 
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
@@ -53,8 +55,10 @@ export default function CustomerPortalForm({ subscription }: Props) {
           : 'You are not currently subscribed to any plan.'
       }
       footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Cancel your subscription at any time</p>
+        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center gap-4">
+          <p className="pb-4 sm:pb-0 grow">
+            Cancel your subscription at any time
+          </p>
           {/* <Button
             variant="slim"
             onClick={handleStripePortalRequest}
@@ -62,13 +66,14 @@ export default function CustomerPortalForm({ subscription }: Props) {
           >
             Open customer portal
           </Button> */}
-          <Button
-            variant="slim"
-            disabled={!subscription}
-            onClick={() => console.log(9999)}
+          <CancelDialog
+            subscriptionId={(subscription as Subscription).id}
+            product={subscription?.prices?.products?.name as string}
           >
-            Cancel
-          </Button>
+            <Button variant={'slim'} disabled={!subscription}>
+              Cancel
+            </Button>
+          </CancelDialog>
         </div>
       }
     >
@@ -78,6 +83,12 @@ export default function CustomerPortalForm({ subscription }: Props) {
         ) : (
           <Link href="/">Choose your plan</Link>
         )}
+        <div>
+          {subscription?.paused && (
+            <PausedBadge when={subscription?.paused_period_end || 0} />
+          )}
+          {subscription?.discount && <DiscountBadge />}
+        </div>
       </div>
     </Card>
   );

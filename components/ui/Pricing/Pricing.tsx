@@ -11,7 +11,7 @@ import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { CancelDialog } from '@/components/ui/CancelDialog';
-import { DialogTrigger } from '@/components/ui/Dialog';
+import { Badge } from '@/components/ui/Badge';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -33,6 +33,24 @@ interface Props {
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
+
+export const PausedBadge = ({ when = 0 }) => {
+  const date = new Date(when);
+  const formated = `${date.toISOString().split('T')[0]}`;
+  return (
+    <Badge className=" text-orange-300 border-orange-400" variant="outline">
+      Paused until {formated}
+    </Badge>
+  );
+};
+
+export const DiscountBadge = () => {
+  return (
+    <Badge className=" text-green-300 border-green-400" variant="outline">
+      With 20% OFF!
+    </Badge>
+  );
+};
 
 export default function Pricing({ user, products, subscription }: Props) {
   const intervals = Array.from(
@@ -161,7 +179,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                 <div
                   key={product.id}
                   className={cn(
-                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600',
+                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 relative',
                     {
                       'border border-pink-500': isSuscribedToPlan,
                       'bg-zinc-900': !isSuscribedToPlan
@@ -206,6 +224,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                       <CancelDialog
                         subscriptionId={subscription.id}
                         product={product.name as string}
+                        onOpenChange={() => router.refresh()}
                       >
                         <Button
                           variant={'slim'}
@@ -219,6 +238,16 @@ export default function Pricing({ user, products, subscription }: Props) {
                       </CancelDialog>
                     )}
                   </div>
+                  {isSuscribedToPlan && (
+                    <div className="absolute bottom-0 translate-y-full !border-0 pt-4 right-0 flex gap-2 w-full justify-center">
+                      {subscription.paused && (
+                        <PausedBadge
+                          when={subscription?.paused_period_end || 0}
+                        />
+                      )}
+                      {subscription.discount && <DiscountBadge />}
+                    </div>
+                  )}
                 </div>
               );
             })}
