@@ -235,6 +235,10 @@ const manageSubscriptionStatusChange = async (
     metadata: subscription.metadata,
     status: subscription.status,
     price_id: subscription.items.data[0].price.id,
+    // CUSTOM FIELDS
+    paused: subscription?.pause_collection?.behavior ? true : false,
+    paused_period_end: subscription?.pause_collection?.resumes_at ?? null,
+    discount: !!subscription?.discounts?.[0] ?? false,
     //TODO check quantity on subscription
     // @ts-ignore
     quantity: subscription.quantity,

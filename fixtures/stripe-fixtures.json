@@ -31,21 +31,6 @@
       }
     },
     {
-      "name": "price_hobby_year",
-      "path": "/v1/prices",
-      "method": "post",
-      "params": {
-        "product": "${prod_hobby:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 10000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
-      }
-    },
-    {
       "name": "prod_freelancer",
       "path": "/v1/products",
       "method": "post",
@@ -73,18 +58,15 @@
       }
     },
     {
-      "name": "price_freelancer_year",
-      "path": "/v1/prices",
+      "name": "20_off_coupon",
+      "path": "/v1/coupons",
       "method": "post",
       "params": {
-        "product": "${prod_freelancer:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 20000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
+        "id": "OFF20",
+        "name": "Discount 20% off x3 months",
+        "percent_off": 20,
+        "duration_in_months": 3,
+        "duration": "repeating"
       }
     }
   ]

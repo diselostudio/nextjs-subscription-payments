@@ -185,25 +185,28 @@ export default function Pricing({ user, products, subscription }: Props) {
                       </span>
                     </p>
 
-                    {!subscription ||
-                      (!isSuscribedToPlan && (
-                        <Button
-                          variant={'slim'}
-                          type="button"
-                          disabled={!!(subscription && !isSuscribedToPlan)}
-                          loading={priceIdLoading === price.id}
-                          onClick={() => handleStripeCheckout(price)}
-                          className={cn(
-                            'block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900'
-                          )}
-                        >
-                          {!subscription
-                            ? 'Subscribe'
-                            : 'Contact sales for an update'}
-                        </Button>
-                      ))}
+                    {(!subscription || !isSuscribedToPlan) && (
+                      <Button
+                        variant={'slim'}
+                        type="button"
+                        disabled={!!(subscription && !isSuscribedToPlan)}
+                        loading={priceIdLoading === price.id}
+                        onClick={() => handleStripeCheckout(price)}
+                        className={cn(
+                          'block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900'
+                        )}
+                      >
+                        {!subscription
+                          ? 'Subscribe'
+                          : 'Contact sales for an update'}
+                      </Button>
+                    )}
+
                     {isSuscribedToPlan && (
-                      <CancelDialog subscriptionId={subscription.id}>
+                      <CancelDialog
+                        subscriptionId={subscription.id}
+                        product={product.name as string}
+                      >
                         <Button
                           variant={'slim'}
                           type="button"
