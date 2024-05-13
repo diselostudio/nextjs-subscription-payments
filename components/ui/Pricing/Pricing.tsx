@@ -222,7 +222,7 @@ export default function Pricing({ user, products, subscription }: Props) {
 
                     {isSuscribedToPlan && (
                       <CancelDialog
-                        subscriptionId={subscription.id}
+                        subscriptionId={subscription?.id}
                         product={product.name as string}
                         onOpenChange={() => router.refresh()}
                       >
