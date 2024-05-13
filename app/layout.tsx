@@ -7,8 +7,8 @@ import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
 const meta = {
-  title: 'Next.js Subscription Starter',
-  description: 'Brought to you by Vercel, Stripe, and Supabase.',
+  title: 'Slashchurn',
+  description: 'Phase1 Prototype.',
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
