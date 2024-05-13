@@ -67,7 +67,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
             Open customer portal
           </Button> */}
           <CancelDialog
-            subscriptionId={(subscription as Subscription).id}
+            subscriptionId={(subscription as Subscription)?.id}
             product={subscription?.prices?.products?.name as string}
           >
             <Button variant={'slim'} disabled={!subscription}>
