@@ -69,6 +69,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
           <CancelDialog
             subscriptionId={(subscription as Subscription)?.id}
             product={subscription?.prices?.products?.name as string}
+            onOpenChange={() => router.refresh()}
           >
             <Button variant={'slim'} disabled={!subscription}>
               Cancel
