@@ -135,7 +135,7 @@ create table subscriptions (
   trial_end timestamp with time zone default timezone('utc'::text, now()),
   -- Custom 
   paused boolean,
-  paused_period_end text,
+  paused_period_end numeric,
   discount boolean
 );
 alter table subscriptions enable row level security;
